@@ -1,0 +1,14 @@
+Entonces lo primero que vamos a hacer es dividir el proyecto en varias partes para que sea mas
+facil de realizar:
+
+	*Formar el campo electrico
+	*Formar el campo magnetico
+	*Formar campo electro magentico
+	*Rotar campo magnetico y electrico
+	*Rotar campo electromagentico
+
+Todo esto espero anelo y deso que tome menos de 3 meses, porque dentro de esto tambien
+esta comprendido el estudiar que metodo es el que vamos a ocupar y dado conociemientos previos
+debemos ocupar metodos numericos que por el simple hecho de comparar proyectos previos sera hecho
+con metodo Runge-Kutta.
+
