@@ -1,0 +1,430 @@
+\documentclass{article}
+\usepackage[table]{xcolor}
+\usepackage[paper=letterpaper,left=1.2cm,right=1.2cm,top=2cm,bottom=1cm,includefoot]{geometry}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{hyperref}
+\usepackage{hhline}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{pgfgantt}
+\usepackage{graphicx}   \graphicspath{{img/}}
+\usepackage{float}
+\usepackage{fancyhdr}
+% \usepackage{subfigure} 
+
+\usepackage{caption}
+\usepackage{subcaption, booktabs}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+
+
+%%% Comente/Descomente las siguientes lineas para cambiar la fuente del texto
+%\usepackage{DejaVuSans}
+%\renewcommand*\familydefault{\sfdefault}
+\usepackage{sansmath}
+\sansmath
+
+\usepackage{xcolor}
+\definecolor{LightGray}{gray}{0.92}
+\usepackage{minted}
+\newminted{python}{ linenos,breaklines,mathescape,texcomments,xleftmargin=\parindent, numbersep=8pt,  bgcolor=LightGray}
+
+\renewcommand\listingscaption{C\'odigo}
+
+
+
+
+\pagestyle{empty}
+
+\definecolor{tcc}{RGB}{217,217,217} % Table cell color
+
+\renewcommand\tabularxcolumn[1]{m{#1}}
+\setlength{\arrayrulewidth}{0.5pt}
+\renewcommand{\arraystretch}{2}
+
+\renewcommand{\thesection}{\alph{section})}
+\renewcommand{\thesubsection}{\alph{section}.\arabic{subsection}}
+
+\renewcommand{\refname}{\vspace{-2ex}}
+
+
+
+
+\lhead{\begin{picture}(0,0)\put(0,0){\includegraphics[width=20mm]{img/marcaderecha (1).png}} \end{picture}}
+\chead{Facultad de Ciencias Físicas y Matemáticas\\ Departamento de Física}
+\rhead{Física Computacional II (510240)}
+\renewcommand{\headrulewidth}{0.5pt}
+
+\pagestyle{fancy}
+
+
+
+
+
+\begin{document}
+
+\begin{center}
+\begin{huge}
+\textbf{Trayectoria de partículas en un campo magnético dipolar}
+\end{huge}
+\vspace*{0.01cm}
+\end{center}
+
+
+
+
+
+\textbf{Integrantes:} Eduardo Escudero - Franco Giovine
+\hspace{1.6cm}
+\textbf{Fecha:} 20 de diciembre del 2022
+
+\textbf{Profesor:} Dr. Roberto E. Navarro
+\hspace{4cm}
+\textbf{Ayudante:} Lorena Sepúlveda \hspace{3,85cm}
+
+
+\begin{center}
+\rule{12cm}{0.1mm}
+\end{center}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%----Abstract o propuesta de proyecto-----%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{abstract}
+
+En el presente proyecto se buscará encontrar la dinámica de partículas, específicamente de electrones y protones en un modelo no relativista y en un campo electromagnético provocado por un dipolo en rotación y en otro caso por un dipolo estático, para ello se usará el método numérico de Runge-Kutta con el cual se resolverá la ecuación diferencial ordinaria que describe el momentum de la partícula. De esta ecuación se encontrarán las posiciones de las partículas las cuales usaremos para realizar una simulación en tres dimensiones de su movimiento, concluyendo así que para el dipolo estático las partículas con carga eléctrica y con velocidad inicial distinta de cero rotarán alrededor de las lineas de campo y en casos específicos del rotativo pareciera orbitar el campo creado por el dipolo.
+
+
+\end{abstract}
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%------Objetivos de proyecto----%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\section*{Objetivos de trabajo}
+
+
+\subsection*{Objetivo general}
+
+Nuestro objetivo es encontrar la dinámica de electrones y protones en presencia de un campo magnético producido por un dipolo estático y en presencia de un campo electromagnético producido por un dipolo que varía en el tiempo producido por la rotación de este.
+
+\subsection*{Objetivos específicos}
+\begin{enumerate}
+\item Encontrar un  modelo de un campo variable, a través del estudio de un campo dipolar rotativo.
+
+\item Estudiar las interacciones electromagnéticas de las partículas con el campo.
+
+\item Comparar la dinámica de partículas cargadas en un campo magnético creado por un dipolo estático y un dipolo en rotación.
+\end{enumerate}
+
+
+%%%%%%%%%%%%%%%%%%%%%---Metodologia o procedimiento--%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Metodología}
+
+Para la realización del proyecto nos respaldamos en el artículo \cite{paper_estudio} en donde se modela la dinámica de partículas cargadas en un campo electromagnético creado por un dipolo magnético en rotación que apunta en dirección del eje $x$. De este artículo utilizamos las ecuaciones \ref{eq: formulas}
+ que nos entregaron los valores del campo electromagnético del dipolo en coordenadas esféricas. En estas ecuaciones $\mu$ corresponde al momento magnético del dipolo, $\tau=\omega t$ donde $\omega$ es la velocidad angular del dipolo y $t$ es el tiempo, $\lambda= 2\pi c / \omega$ con $c$ igual a la velocidad de la luz. Para la realización de esta simulación ocupamos en todos los casos $\mu=10$, para los casos del dipolo estático ocupamos  $\omega= 10^{-100}[rad/s]$ y para el dipolo en rotación $\omega = 100[rad/s]$.
+
+\begin{align}
+    B_r &= 2sin\theta \frac{\mu}{r^3}\left( cos\Phi - 2\pi \frac{r}{\lambda} sin\Phi \right), \,  \, \Phi= \tau - 2\pi r/\lambda - \varphi,  \notag \\
+    B_{\theta} &= cos \theta \frac{\mu}{r^3} \left( - cos \Phi + 2\pi \frac{r}{\lambda} sin \Phi + (2\pi\frac{r}{\lambda})^2 cos\Phi\right), \, \notag\\
+    B_{\varphi} &= \frac{\mu}{r^3} \left( -sin\Phi - 2\pi \frac{r}{\lambda}sin\Phi + (2\pi\frac{r}{\lambda})^2 sin \Phi \right), \notag \\
+    E_r &= 0, \hspace{3mm} E_{\theta} = - \frac{2\pi\mu}{\lambda r^2} \left( cos \Phi - 2\pi\frac{r}{\lambda}sin \Phi \right),  \notag \\ 
+     E_{\varphi} &= - \frac{2\pi\mu}{\lambda r^2} cos \theta \left( sin \Phi + 2\frac{r}{\lambda} cos \Phi \right) .\label{eq: formulas}
+\end{align}
+
+Posteriormente, con ayuda de la ley de conservación del momentum $\textbf{p}$ estudiamos el movimiento de las partículas. Para ello resolvimos la ecuación diferencial ordinaria \ref{eq: momentum}, donde $e$ es la carga de la partícula y $\textbf{v}$ es su velocidad. 
+
+\begin{equation}
+    \frac{d\textbf{p}}{dt} = e(\textbf{E} + [\textbf{v}\textbf{B}]/c ) \label{eq: momentum}
+\end{equation}
+
+Para resolver la ecuación \ref{eq: momentum}  se utilizó el código \ref{Cod_1} en el cual mediante el método de Runge-Kutta obtuvimos los valores del momentum y la posición de la partícula en coordenadas cartesianas.
+
+\vspace{2mm}
+De la línea 1 a la 8 del código \ref{Cod_1} creamos una función que retornaba un arreglo de 6 columnas, donde las primeras 3  corresponden a las ecuaciones diferenciales ordinarias \ref{eq: momentum} en coordenadas cartesianas y las últimas 3 dimensiones corresponden a la velocidad de la partícula.
+
+Luego, en la línea 12 creamos la matriz vacía \texttt{p} de dimensiones 100000x6 la cual después correspondería al resultado de la ecuación \ref{eq: momentum}. Seguidamente, en la línea 14 asignamos los valores iniciales del momentum y de la posición. 
+
+Finalmente, en la línea 16 resolvimos las ecuaciones diferenciales ordinarias obteniendo todos los valores de la matriz \texttt{p} la cual contiene los valores del momentum y de la posición en el transcurso de un segundo.
+
+\begin{listing}[h]
+    \begin{minted}[
+frame=lines,
+framesep=2mm,
+baselinestretch=1.2,
+bgcolor=LightGray,
+fontsize=\footnotesize,
+linenos
+]
+{python}
+def f_p(p,t):
+    px, py, pz, rx, ry, rz = p
+    Bx, By, Bz, Ex, Ey, Ez = EM(rx,ry,rz,t)
+    vx = px/me
+    vy = py/me
+    vz = pz/me
+
+    return np.array([ ((vy*Bz-vz*By)/c + Ex)*e, ((-vx*Bz+vz*Bx)/c + Ey)*e, (Ez+(vx*By-vy*Bx)/c)*e,
+                     vx, vy, vz ])
+
+h=1e-5
+t = np.arange(0,1,h)
+p=np.empty([t.size,6])
+p[0]=[px_i, py_i, pz_i, rx_i, ry_i, rz_i]
+
+for n in range(t.size-1):
+    K1= f_p(p[n], t[n])
+    K2= f_p(p[n] + h*0.5*K1, t[n]+0.5*h )
+    K3= f_p(p[n] + h*0.5*K2, t[n]+0.5*h )
+    K4= f_p(p[n] + h*K3, t[n]+h )
+    p[n+1]= p[n] + (h/6)*(K1 + 2*K2 + 2*K3 + K4)
+    \end{minted}
+\caption{Fragmento de código en el cual resolvimos la ecuación \ref{eq: momentum}.}
+\label{Cod_1}
+\end{listing}
+
+Posteriormente, resolvimos la ecuación \ref{Cod_1} para un dipolo estático, para ello consideramos un $\omega$ muy próximo a $0$ tal que $\lambda$ tendiera al infinito, de este modo pudimos redefinir nuestras ecuaciones para poder calcular el movimiento de las partículas, pero en este caso debimos tomar un momentum inicial distinto de cero obligatoriamente.
+
+
+
+
+
+
+
+% Explique detalladamente el problema o aplicación que busca
+% trabajar. Para acompañar su proyecto, puede utilizar ecuaciones dentro
+% del texto como $\frac{x}{\sqrt{1-x^2}}$, o bien ecuaciones enumeradas,
+% por ejemplo:
+% \begin{equation}\label{eq:euler}
+% \exp(i\theta) = \cos(\theta) + i\sin(\theta).
+% \end{equation}
+
+% Puede citar ecuaciones enumeradas, por ejemplo la ecuación
+% \eqref{eq:euler} es una de las ecuaciones básicas del cálculo
+% complejo.
+
+% También puede agregar figuras para explicar mejor sus ideas. Trate de
+% citarlas adecuadamente en el texto, por ejemplo, la figura
+% \ref{fig:figura-interesante} muestra un ejemplo usado en wikipedia
+% para explicar la electricidad estática~\cite{wikistatic}.
+
+
+
+% Para darle peso a su proyecto, puede citar libros, páginas web o artículos científicos. Por ejemplo, esta es una referencia 
+% \cite{AF:2003} o dos referencias juntas \cite{CEL:arXiv, MS}.
+
+
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+
+
+%------------------------------------------------%
+%------------------------------------------------%
+%------------------------------------------------%
+%------------------------------------------------%
+%------------------------------------------------%
+
+
+
+
+
+
+
+
+
+%------------------------------------------------%
+%------------------------------------------------%
+%-------------------Resultados-----------------------------%
+%------------------------------------------------%
+%------------------------------------------------%
+
+\section*{Resultados}
+
+Comenzamos trabajando con el dipolo en rotación, para ello posicionamos un protón con velocidad inicial igual a $\textbf{0}$ en el eje $x$ a 1 metro de distancia del origen, donde su trayectoria durante 10 segundos quedó representada en el gráfico \ref{x_pos_tor}. Luego, para hallar como afectaba el signo de la carga de la partícula en la trayectoria reemplazamos el protón por otra partícula con la misma masa del protón y con la misma carga, pero negativa, de este modo, obtuvimos el gráfico \ref{x_neg_rot}. Seguidamente para observar como se comportaba el protón en el campo del dipolo estático, ubicamos un protón en la misma posición inicial, pero con velocidad $\textbf{v} =0.1\hat{z} \left[ \frac{m}{s} \right]$ consiguiendo el gráfico \ref{x_pos}.
+
+\begin{figure}[]
+    \centering
+    \begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{ejex_pos_rot.pdf}
+        \caption{Trayectoria de un protón durante 10 segundos con velocidad inicial 0 y posición inicial (1,0,0) en un campo electromagnético creado por un dipolo en rotación. }
+        \label{x_pos_tor}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{ejex_neg_rot.pdf}
+        \caption{Trayectoria de un electrón durante 10 segundos con velocidad inicial 0 y posición inicial (1,0,0) en un campo electromagnético creado por un dipolo en rotación.}
+        \label{x_neg_rot}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.32\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{ejex_pos.pdf}
+        \caption{Trayectoria de un protón durante 20 segundos con velocidad inicial (0, 0, 0.1) y posición inicial (1,0,0) en un campo electromagnético creado por un dipolo estático.}
+        \label{x_pos}
+    \end{subfigure}
+    \caption{}
+    \label{}
+\end{figure}
+
+
+\vspace{2mm}
+Continuando con el estudio de como se comportaban los protones con velocidad inicial igual a cero en el campo del dipolo en rotación, para ello graficamos la trayectoria de un protón con posición inicial sobre el eje $y$ a una distancia de $1m$ del origen y de otro protón con posición inicial en el punto $(1,0,1)$, consiguiendo los gráficos \ref{y_rot} y \ref{101_rot}, respectivamente.
+
+\vspace{2mm}
+Luego, con el fin de comparar el comportamiento de los protones de los gráficos \ref{x_pos_tor}, \ref{y_rot} y \ref{101_rot} con la trayectoria que seguirían los protones con la misma ubicación, pero en un campo de un dipolo estático y con un momentum distinto de cero, se crearon los gráficos \ref{x_pos}, \ref{y} y \ref{101}, los cuales corresponden a la trayectoria seguida por protones inicialmente ubicados en los puntos $(1,0,0)$, $(0,1,0)$ y $(1,0,1)$, respectivamente, dentro de un campo magnético fijo con una velocidad inicial de $(0,0,0$.$1) m/s$, $(0, 0$.$01, 0)m/s$ y $( 0$.$01, 0, 0)m/s$, respectivamente.
+
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.245\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{ejey_pos_rot.pdf}
+        \caption{Trayectoria de un protón durante 1 segundo con velocidad inicial 0 y posición inicial (0,1,0) en un campo electromagnético creado por un dipolo en rotación.}
+        \label{y_rot}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.245\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{ejey_pos.pdf}
+        \caption{Trayectoria de un protón durante 20 segundos con velocidad inicial (0, 0.01, 0) y posición inicial (0,1,0) en un campo electromagnético creado por un dipolo estático.}
+        \label{y}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.245\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{1_0_1_rot.pdf}
+        \caption{Trayectoria de un protón durante 2 segundos con velocidad inicial 0 y posición inicial (1,0,1) en un campo electromagnético creado por un dipolo en rotación.}
+        \label{101_rot}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.245\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{1_0_1.pdf}
+        \caption{Trayectoria de un protón durante 20 segundos con velocidad inicial (0.01, 0, 0) y posición inicial (1,0,1) en un campo electromagnético creado por un dipolo estático.}
+        \label{101}
+    \end{subfigure}
+    \caption{}
+    \label{}
+\end{figure}
+
+
+\vspace{2mm}
+En los casos anteriores se tomó un tiempo menor en los casos del dipolo en rotación, ya que cuando el tiempo era muy alto en estos casos las trayectorias de las partículas se escapaban de la influencia del dipolo, quedando una curva que se alejaba cada vez más del origen.
+
+\vspace{2mm}
+Finalmente, analizamos como se comportaban los protones cuando tenían un momentum inicial distinto de cero en el campo variable, para ello propusimos 4 partículas con condiciones iniciales distintas. Posicionamos las partículas en los puntos (0.5, 0.5, 0), (-0.5, 0.5, 0), (0.5, -0.5, 0) y (-0.5, -0.5, 0) con velocidades iniciales (-0.5, -0.5, 0)$[m/s]$, (0.5, -0.5, 0)$[\frac{m}{s}]$, (-0.5, 0.5, 0)$[\frac{m}{s}]$ y (0.5, 0.5, 0)$[\frac{m}{s}]$, de tal forma de que estas estuvieran siendo disparadas en dirección al origen. De este modo, obtuvimos el gráfico \ref{05con}, por otra parte, hicimos el gráfico \ref{05sin} que representaba partículas con las mismas condiciones, pero con velocidad inicial cero.
+
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.4\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{05_con_momentum.pdf}
+        \caption{}
+        \label{05con}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.4\textwidth}
+        \centering
+        \includegraphics[width=\textwidth]{05_sin_momentum.pdf}
+        \caption{}
+        \label{05sin}
+    \end{subfigure}
+    \caption{El gráfico de la izquierda representa la trayectoria de protones con un velocidad inicial distinta de cero y el gráfico de la derecha representa a las mismas partículas pero con una velocidad inicial igual a 0. El punto naranjo es el origen.}
+    \label{}
+\end{figure}
+
+También nos gustaría añadir que no pudimos estudiar cuando las partículas se encontraban sobre el eje $z$ y sus cercanías, ya que el movimiento de las partículas se comportaba de manera irregular, específicamente cuando el dipolo rotaba. Probablemente esto se debió a cómo definimos las transformaciones de coordenada esféricas a cartesianas. 
+
+%\vspace{2mm}
+%En el experimento del dipolo estático podemos apreciar que sobre los ejes coordenados, el electrón y el protón giran coaxialmente \ref{fig: estatic_pye}, tal y como se puede apreciar en la gráfica tenemos que para el eje x e z presenta un comportamiento similar como si el electrón se alejara al pasar del tiempo y en el eje y tenemos que presenta un comportamiento constante.
+
+%posteriormente se realizo una simulación con 4 partículas las cuales apuntan a en la misma dirección pero en diferentes puntos del plano \ref{fig: estatic_multiple}, dándonos cuenta que las partículas se alejan para el caso del eje x estático.
+
+%En el experimento del dipolo rotando podemos apreciar varios casos, con diferentes comportamientos en cada uno de ellos se tomara un $\omega = 100 [rad/s]$ y $\mu=10$.
+
+%Seguidamente trabajamos y comparamos las posiciones iniciales trabajadas en el polo estático y las movimos directamente al dipolo rotativo donde nos encontramos con un comportamiento en el cual pareciera que el electrón oscila alrededor de estos centros.
+
+%Para finalizar podemos 
+
+
+\section*{Conclusiones}
+
+En este proyecto pudimos encontrar la dinámica de partículas en un dipolo rotativo y estático, para ello usamos las formulas de campo del proyecto \cite{paper_estudio} y encontramos las posiciones de las partículas a través de la ecuación \ref{eq: momentum} de la conservación del momentum aplicando el método Runge-Kutta.
+
+\vspace{2mm}
+A partir de las posiciones obtenidas se pudo generar una simulación del movimiento de las partículas, las cuales nos sirvieron para poder observar que en el dipolo estático los partículas giran al rededor de las lineas de campo. Por otra parte, en el dipolo rotativo las partículas se alejaban del dipolo sin importar su momentum inicial y cuando se encontraban en los polos las partículas rotaban oscilando.
+Además, cuando se cambiaba la carga de la partícula esta rotaba en sentido angular contrario.
+
+\vspace{2mm}
+Como acotaciones grupales debemos decir que como grupo nos faltó tiempo para estudiar en profundidad el comportamiento del dipolo. Además, como conocimientos adquiridos a través de este proyecto, queremos destacar la capacidad de visualizar errores en el código, esto impulsado especialmente porque no sabíamos como estaba descrito el campo, como describir las fórmulas y usar correctamente el método de Runge-Kutta, por lo que son aptitudes que debimos aprender en la realización del proyecto.
+
+
+
+
+% El interpretar el 
+                    
+
+
+
+% \begin{figure}
+
+%     \begin{subfigure}
+%     \includegraphics{trayectoria_polo.png}
+%     \caption{Movimiento del electrón posicionado en el polo, con momentum inicial nulo}
+%     \label{fig: trayectoria_polo}
+%     \end{subfigure}
+    
+%     \begin{subfigure}
+%     \includegraphics{vista desde arriba.png}
+%     \caption{Movimiento del electrón posicionado en el polo, con momentum inicial nulo, con una visión superior}
+%     \label{fig: trayectoria_polo_arriba}
+%     \end{subfigure}
+% \end{figure}
+
+% \begin{figure}
+%     \centering
+%     \includegraphics{vista desde arriba.png}
+%     \caption{Movimiento del electrón posicionado en el polo, con momentum inicial nulo, con una visión superior}
+%     \label{fig: trayectoria_polo_arriba}
+% \end{figure}
+
+
+\bibliographystyle{amsplain}
+\bibliography{referencias}
+
+\end{document}
+
+
+    ax.plot(p[:i,3], p[:i,4], p[:i,5])

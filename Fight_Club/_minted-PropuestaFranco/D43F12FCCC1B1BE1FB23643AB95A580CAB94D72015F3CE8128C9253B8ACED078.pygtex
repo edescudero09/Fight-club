@@ -1,0 +1,23 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k}{def} \PYG{n+nf}{f\PYGZus{}p}\PYG{p}{(}\PYG{n}{p}\PYG{p}{,}\PYG{n}{t}\PYG{p}{):}
+    \PYG{n}{px}\PYG{p}{,} \PYG{n}{py}\PYG{p}{,} \PYG{n}{pz}\PYG{p}{,} \PYG{n}{rx}\PYG{p}{,} \PYG{n}{ry}\PYG{p}{,} \PYG{n}{rz} \PYG{o}{=} \PYG{n}{p}
+    \PYG{n}{Bx}\PYG{p}{,} \PYG{n}{By}\PYG{p}{,} \PYG{n}{Bz}\PYG{p}{,} \PYG{n}{Ex}\PYG{p}{,} \PYG{n}{Ey}\PYG{p}{,} \PYG{n}{Ez} \PYG{o}{=} \PYG{n}{EM}\PYG{p}{(}\PYG{n}{rx}\PYG{p}{,}\PYG{n}{ry}\PYG{p}{,}\PYG{n}{rz}\PYG{p}{,}\PYG{n}{t}\PYG{p}{)}
+    \PYG{n}{vx} \PYG{o}{=} \PYG{n}{px}\PYG{o}{/}\PYG{n}{me}
+    \PYG{n}{vy} \PYG{o}{=} \PYG{n}{py}\PYG{o}{/}\PYG{n}{me}
+    \PYG{n}{vz} \PYG{o}{=} \PYG{n}{pz}\PYG{o}{/}\PYG{n}{me}
+
+    \PYG{k}{return} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{([} \PYG{p}{((}\PYG{n}{vy}\PYG{o}{*}\PYG{n}{Bz}\PYG{o}{\PYGZhy{}}\PYG{n}{vz}\PYG{o}{*}\PYG{n}{By}\PYG{p}{)}\PYG{o}{/}\PYG{n}{c} \PYG{o}{+} \PYG{n}{Ex}\PYG{p}{)}\PYG{o}{*}\PYG{n}{e}\PYG{p}{,} \PYG{p}{((}\PYG{o}{\PYGZhy{}}\PYG{n}{vx}\PYG{o}{*}\PYG{n}{Bz}\PYG{o}{+}\PYG{n}{vz}\PYG{o}{*}\PYG{n}{Bx}\PYG{p}{)}\PYG{o}{/}\PYG{n}{c} \PYG{o}{+} \PYG{n}{Ey}\PYG{p}{)}\PYG{o}{*}\PYG{n}{e}\PYG{p}{,} \PYG{p}{(}\PYG{n}{Ez}\PYG{o}{+}\PYG{p}{(}\PYG{n}{vx}\PYG{o}{*}\PYG{n}{By}\PYG{o}{\PYGZhy{}}\PYG{n}{vy}\PYG{o}{*}\PYG{n}{Bx}\PYG{p}{)}\PYG{o}{/}\PYG{n}{c}\PYG{p}{)}\PYG{o}{*}\PYG{n}{e}\PYG{p}{,}
+                     \PYG{n}{vx}\PYG{p}{,} \PYG{n}{vy}\PYG{p}{,} \PYG{n}{vz} \PYG{p}{])}
+
+\PYG{n}{h}\PYG{o}{=}\PYG{l+m+mf}{1e\PYGZhy{}5}
+\PYG{n}{t} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{arange}\PYG{p}{(}\PYG{l+m+mi}{0}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{n}{h}\PYG{p}{)}
+\PYG{n}{p}\PYG{o}{=}\PYG{n}{np}\PYG{o}{.}\PYG{n}{empty}\PYG{p}{([}\PYG{n}{t}\PYG{o}{.}\PYG{n}{size}\PYG{p}{,}\PYG{l+m+mi}{6}\PYG{p}{])}
+\PYG{n}{p}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}\PYG{o}{=}\PYG{p}{[}\PYG{n}{px\PYGZus{}i}\PYG{p}{,} \PYG{n}{py\PYGZus{}i}\PYG{p}{,} \PYG{n}{pz\PYGZus{}i}\PYG{p}{,} \PYG{n}{rx\PYGZus{}i}\PYG{p}{,} \PYG{n}{ry\PYGZus{}i}\PYG{p}{,} \PYG{n}{rz\PYGZus{}i}\PYG{p}{]}
+
+\PYG{k}{for} \PYG{n}{n} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{t}\PYG{o}{.}\PYG{n}{size}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{):}
+    \PYG{n}{K1}\PYG{o}{=} \PYG{n}{f\PYGZus{}p}\PYG{p}{(}\PYG{n}{p}\PYG{p}{[}\PYG{n}{n}\PYG{p}{],} \PYG{n}{t}\PYG{p}{[}\PYG{n}{n}\PYG{p}{])}
+    \PYG{n}{K2}\PYG{o}{=} \PYG{n}{f\PYGZus{}p}\PYG{p}{(}\PYG{n}{p}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]} \PYG{o}{+} \PYG{n}{h}\PYG{o}{*}\PYG{l+m+mf}{0.5}\PYG{o}{*}\PYG{n}{K1}\PYG{p}{,} \PYG{n}{t}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]}\PYG{o}{+}\PYG{l+m+mf}{0.5}\PYG{o}{*}\PYG{n}{h} \PYG{p}{)}
+    \PYG{n}{K3}\PYG{o}{=} \PYG{n}{f\PYGZus{}p}\PYG{p}{(}\PYG{n}{p}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]} \PYG{o}{+} \PYG{n}{h}\PYG{o}{*}\PYG{l+m+mf}{0.5}\PYG{o}{*}\PYG{n}{K2}\PYG{p}{,} \PYG{n}{t}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]}\PYG{o}{+}\PYG{l+m+mf}{0.5}\PYG{o}{*}\PYG{n}{h} \PYG{p}{)}
+    \PYG{n}{K4}\PYG{o}{=} \PYG{n}{f\PYGZus{}p}\PYG{p}{(}\PYG{n}{p}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]} \PYG{o}{+} \PYG{n}{h}\PYG{o}{*}\PYG{n}{K3}\PYG{p}{,} \PYG{n}{t}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]}\PYG{o}{+}\PYG{n}{h} \PYG{p}{)}
+    \PYG{n}{p}\PYG{p}{[}\PYG{n}{n}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{=} \PYG{n}{p}\PYG{p}{[}\PYG{n}{n}\PYG{p}{]} \PYG{o}{+} \PYG{p}{(}\PYG{n}{h}\PYG{o}{/}\PYG{l+m+mi}{6}\PYG{p}{)}\PYG{o}{*}\PYG{p}{(}\PYG{n}{K1} \PYG{o}{+} \PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{K2} \PYG{o}{+} \PYG{l+m+mi}{2}\PYG{o}{*}\PYG{n}{K3} \PYG{o}{+} \PYG{n}{K4}\PYG{p}{)}
+\end{Verbatim}
