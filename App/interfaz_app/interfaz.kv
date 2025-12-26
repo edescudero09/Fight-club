@@ -1,0 +1,118 @@
+# interfaz.kv
+ScreenManager:
+    id: screen_manager
+    ConnectionScreen:
+        id: connect_screen
+        name: 'connect'
+    ControlScreen:
+        id: control_screen
+        name: 'control'
+
+<ConnectionScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 40
+        spacing: 20
+        Label:
+            text: 'Conectar a Bomba (USB)'
+            font_size: '24sp'
+            size_hint_y: None
+            height: self.texture_size[1]
+        Spinner:
+            id: device_spinner
+            text: 'Selecciona un puerto USB'
+            size_hint_y: None
+            height: '48dp'
+        Button:
+            text: 'Refrescar Lista'
+            size_hint_y: None
+            height: '48dp'
+            on_press: root.list_serial_ports()
+        Button:
+            text: 'Conectar'
+            size_hint_y: None
+            height: '48dp'
+            background_color: (0.2, 0.8, 0.2, 1)
+            on_press: root.connect_to_device(device_spinner.text)
+        Label:
+            id: connect_status
+            text: ''
+
+<ControlScreen>:
+    orientation: 'vertical'
+    padding: 20
+    spacing: 15
+    Label:
+        id: title_label
+        text: 'PUESTA A CERO'
+        font_size: '24sp'
+        size_hint_y: 0.2
+    Label:
+        id: value_display
+        text: 'Use +/- para mover'
+        font_size: '32sp'
+        bold: True
+    BoxLayout:
+        id: control_panel
+        size_hint_y: 0.3
+        spacing: 10
+        Button:
+            id: minus_button
+            text: "-"
+            font_size: '40sp'
+            on_press: root.handle_minus_press()
+            on_release: root.stop_adjustment()
+        Button:
+            id: select_button
+            text: "Fijar CERO"
+            font_size: '22sp'
+            background_color: (0.2, 0.8, 0.2, 1)
+            on_press: root.handle_select_press()
+        Button:
+            id: plus_button
+            text: "+"
+            font_size: '40sp'
+            on_press: root.handle_plus_press()
+            on_release: root.stop_adjustment()
+    BoxLayout:
+        size_hint_y: 0.2
+        spacing: 10
+        Button:
+            text: "Reiniciar Proceso"
+            font_size: '18sp'
+            background_color: (0.2, 0.4, 0.8, 1)
+            on_press: root.send_reset_command()
+        Button:
+            text: "STOP"
+            font_size: '22sp'
+            bold: True
+            background_color: (1, 0.2, 0.2, 1)
+            on_press: root.send_stop_command()
+    Label:
+        id: status_label
+        text: 'Estado: Conectado'
+        size_hint_y: 0.1
+
+<ReturnToZeroPopup@ModalView>:
+    size_hint: 0.8, 0.4
+    auto_dismiss: False
+    title: 'Proceso Completado'
+    BoxLayout:
+        orientation: 'vertical'
+        padding: '15dp'
+        spacing: '10dp'
+        Label:
+            text: '¿Deseas regresar el émbolo a la posición CERO?'
+            halign: 'center'
+        BoxLayout:
+            size_hint_y: None
+            height: '48dp'
+            spacing: '10dp'
+            Button:
+                text: 'Sí, regresar'
+                background_color: (0.2, 0.8, 0.2, 1)
+                on_press: app.root.get_screen('control').confirm_return_to_zero('z')
+            Button:
+                text: 'No, mantener'
+                background_color: (0.8, 0.2, 0.2, 1)
+                on_press: app.root.get_screen('control').confirm_return_to_zero('k')

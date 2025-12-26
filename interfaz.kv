@@ -1,0 +1,236 @@
+#:set bg_color (0.15, 0.15, 0.17, 1)
+#:set card_color (0.2, 0.2, 0.22, 1)
+#:set accent_color (0.2, 0.6, 1, 1)
+#:set success_color (0.2, 0.7, 0.3, 1)
+#:set text_color (0.9, 0.9, 0.9, 1)
+
+<ControlBombaWidget>:
+    orientation: 'vertical'
+    padding: 15
+    spacing: 15
+    canvas.before:
+        Color:
+            rgba: bg_color
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    # --- BARRA DE ESTADO SIMULADA ---
+    Label:
+        text: 'BOMBA PRO V2'
+        font_size: '14sp'
+        color: (0.5, 0.5, 0.5, 1)
+        size_hint_y: 0.05
+        halign: 'center'
+
+    Label:
+        id: title_label
+        text: 'CONECTANDO...'
+        font_size: '22sp'
+        bold: True
+        color: accent_color
+        size_hint_y: 0.1
+
+    # --- TARJETA PRINCIPAL (Look de pantalla de máquina) ---
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 10
+        spacing: 5
+        size_hint_y: 0.25
+        canvas.before:
+            Color:
+                rgba: card_color
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [15]
+        
+        Label:
+            id: value_display
+            text: '---'
+            font_size: '42sp'
+            bold: True
+            color: text_color
+        
+        Label:
+            id: sub_display
+            text: ''
+            font_size: '18sp'
+            color: (0.7, 0.7, 0.7, 1)
+
+    # --- PANEL DE CONTROL ---
+    BoxLayout:
+        id: control_panel
+        size_hint_y: 0.25
+        spacing: 10
+        
+        Button:
+            id: left_btn
+            text: "-"
+            font_size: '30sp'
+            background_color: (0.3, 0.3, 0.35, 1)
+            on_press: root.handle_minus_press()
+            on_release: root.stop_adjustment()
+        
+        Button:
+            id: center_btn
+            text: "ACCIÓN"
+            font_size: '20sp'
+            bold: True
+            background_color: success_color
+            on_press: root.handle_select_press()
+        
+        Button:
+            id: right_btn
+            text: "+"
+            font_size: '30sp'
+            background_color: (0.3, 0.3, 0.35, 1)
+            on_press: root.handle_plus_press()
+            on_release: root.stop_adjustment()
+
+    # --- BOTONES EXTRA ---
+    BoxLayout:
+        id: extra_panel
+        size_hint_y: 0.1
+        opacity: 0
+        disabled: True
+        Button:
+            id: extra_btn
+            text: "CONFIGURACIÓN"
+            font_size: '16sp'
+            background_color: (0.8, 0.5, 0.2, 1)
+            on_press: root.handle_extra_press()
+
+    # --- CONTROL GLOBAL ---
+    BoxLayout:
+        size_hint_y: 0.15
+        spacing: 10
+        Button:
+            text: "REINICIAR"
+            font_size: '16sp'
+            background_color: accent_color
+            on_press: root.send_reset_command()
+        Button:
+            text: "STOP"
+            font_size: '18sp'
+            bold: True
+            background_color: (0.9, 0.3, 0.3, 1)
+            on_press: root.send_stop_command()
+
+    Label:
+        id: status_label
+        text: 'Listo.'
+        font_size: '12sp'
+        color: (0.6, 0.6, 0.6, 1)
+        size_hint_y: 0.05
+
+# --- POPUP PROGRESO (Ajustado para pantalla vertical) ---
+<ExpulsionProgressPopup@ModalView>:
+    size_hint: 0.95, 0.7 
+    auto_dismiss: False
+    background_color: (0, 0, 0, 0.9)
+    
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 20
+        spacing: 10
+        canvas.before:
+            Color:
+                rgba: (0.18, 0.18, 0.2, 1)
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [20]
+
+        Label:
+            text: "PROCESO EN CURSO"
+            font_size: '20sp'
+            bold: True
+            color: (0.2, 0.8, 1, 1)
+            size_hint_y: 0.15
+
+        GridLayout:
+            cols: 2
+            spacing: 5
+            size_hint_y: 0.45
+            
+            Label:
+                text: "Carga Total:"
+                halign: 'right'
+                color: (0.7, 0.7, 0.7, 1)
+            Label:
+                id: lbl_total
+                text: "---"
+                halign: 'left'
+                bold: True
+
+            Label:
+                text: "Progreso:"
+                halign: 'right'
+                color: (0.7, 0.7, 0.7, 1)
+            Label:
+                id: lbl_current
+                text: "0.0 mL"
+                halign: 'left'
+                bold: True
+                color: (0.2, 1, 0.2, 1)
+
+            Label:
+                text: "Tiempo Est.:"
+                halign: 'right'
+                color: (0.7, 0.7, 0.7, 1)
+            Label:
+                id: lbl_time
+                text: "..."
+                halign: 'left'
+
+        BoxLayout:
+            orientation: 'vertical'
+            size_hint_y: 0.25
+            spacing: 2
+            Label:
+                id: lbl_percent
+                text: "0%"
+                font_size: '16sp'
+                bold: True
+            ProgressBar:
+                id: progress_bar
+                max: 100
+                value: 0
+
+        Button:
+            text: "DETENER"
+            size_hint_y: 0.15
+            background_color: (0.9, 0.2, 0.2, 1)
+            on_press: app.root.send_stop_command()
+
+# --- POPUP FINAL (Ajustado) ---
+<ReturnToZeroPopup@ModalView>:
+    size_hint: 0.9, 0.4
+    auto_dismiss: False
+    background_color: (0,0,0,0.8)
+    BoxLayout:
+        orientation: 'vertical'
+        padding: 15
+        spacing: 10
+        canvas.before:
+            Color:
+                rgba: (0.2, 0.2, 0.22, 1)
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [15]
+        Label:
+            text: 'Ciclo Completado.\n¿Regresar a CERO?'
+            halign: 'center'
+            font_size: '18sp'
+        BoxLayout:
+            spacing: 10
+            Button:
+                text: 'SÍ'
+                background_color: success_color
+                on_press: app.root.confirm_return_to_zero('z')
+            Button:
+                text: 'NO'
+                background_color: (0.4, 0.4, 0.4, 1)
+                on_press: app.root.confirm_return_to_zero('k')
